@@ -5,27 +5,28 @@ import java.net.InetAddress;
 public class Server {
     public static void main(String[] args) {
         try {
-            DatagramSocket serverSocket = new DatagramSocket(9876);
+            DatagramSocket serverSocket = new DatagramSocket(9876); // create UDP socket
 
-            while (true) { // always running
-                // Receive a message from the client
-                byte[] data = new byte[1024]; // buffer with size 1024 bytes
-                DatagramPacket receivedPacket = new DatagramPacket(data, data.length); // create an empty packet of size 1024 bytes, this is an empty datagram packet
-                serverSocket.receive(receivedPacket); // fill empty packet with data
-                String receivedSentence = new String(receivedPacket.getData()); // extract data part and convert to string
+            while (true) { // always listen for incoming data
 
-                // Extracting the IP address and port number of the client
-                InetAddress IPAddress = receivedPacket.getAddress();
-                int port = receivedPacket.getPort();
+                // Receive data from client
+                byte[] data = new byte[1024]; // create buffer with 1024 bytes of size
+                DatagramPacket incomingPacket = new DatagramPacket(data, data.length); // create packet for incoming data
+                serverSocket.receive(incomingPacket); // receive packet from network using socket
+                String packetContent = new String(incomingPacket.getData()); // store packet content
 
-                System.out.println("Message from Client: " + receivedSentence);
+                InetAddress IPAddress = incomingPacket.getAddress(); // extract IP address from incoming packet
+                int port = incomingPacket.getPort(); // extract port number from incoming packet
 
-                // Extracting numbers and operation from client message
-                String[] messageComponents = receivedSentence.split(",");
+                System.out.println("Message from Client: " + packetContent); // display packet content
+
+                // Extracting core message components from packet content
+                String[] messageComponents = packetContent.split(",");
                 double firstNumber = Double.parseDouble(messageComponents[0]);
                 double secondNumber = Double.parseDouble(messageComponents[1]);
                 double operator = Double.parseDouble(messageComponents[2]);
 
+                // Computing result
                 double result = 0;
                 switch ((int) operator) {
                     case 0: // add
@@ -50,14 +51,14 @@ public class Server {
                         break;
                 }
 
-                // sending a reply
-                String sendingSentence = "Answer: " + result;
-                byte[] sendingDataBuffer = new byte[1024]; // fill new buffer with reply data and convert to string
-                sendingDataBuffer = sendingSentence.getBytes();
-                DatagramPacket sendingPacket = new DatagramPacket(sendingDataBuffer, sendingDataBuffer.length, IPAddress, port);   // create packet for outgoing data
-                serverSocket.send(sendingPacket); // send packet to socket over network
+                // Send result to client
+                String formattedResult = "Answer: " + result;
+                byte[] outgoingData = new byte[1024]; // create buffer with 1024 bytes of size
+                outgoingData = formattedResult.getBytes(); // fill buffer with data
+                DatagramPacket sendingPacket = new DatagramPacket(outgoingData, outgoingData.length, IPAddress, port); // create packet for outgoing data
+                serverSocket.send(sendingPacket); // send packet across network using socket
             }
-        } catch (Exception ignored) { // general "Exception"
+        } catch (Exception ignored) {
         }
     }
 }
