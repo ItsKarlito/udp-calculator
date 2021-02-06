@@ -58,7 +58,7 @@ public class Server {
                 }
 
                 // Send result to client
-                result = (double)Math.round(result * 10000000000d) / 10000000000d;
+                result = (double) Math.round(result * 10000000000d) / 10000000000d;
                 String formattedResult = "Answer: " + firstNumber + " " + operatorChar + " " + secondNumber + " = " + result;
                 if (operatorChar.equals("Max") || operatorChar.equals("Min")) {
                     formattedResult = "Answer: " + operatorChar + " = " + result;
