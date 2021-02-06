@@ -27,31 +27,31 @@ public class Server {
 
                 // Computing result
                 double result = 0.0;
-                String operatorChar = "";
+                String operatorSymbol = "";
                 switch ((int) operator) {
                     case 0: // add
                         result = firstNumber + secondNumber;
-                        operatorChar = "+";
+                        operatorSymbol = "+";
                         break;
                     case 1: // subtract
                         result = firstNumber - secondNumber;
-                        operatorChar = "-";
+                        operatorSymbol = "-";
                         break;
                     case 2: // multiply
                         result = firstNumber * secondNumber;
-                        operatorChar = "x";
+                        operatorSymbol = "x";
                         break;
                     case 3: // divide
                         result = firstNumber / secondNumber;
-                        operatorChar = "÷";
+                        operatorSymbol = "÷";
                         break;
                     case 4: // max
                         result = Math.max(firstNumber, secondNumber);
-                        operatorChar = "Max";
+                        operatorSymbol = "Max";
                         break;
                     case 5: // min
                         result = Math.min(firstNumber, secondNumber);
-                        operatorChar = "Min";
+                        operatorSymbol = "Min";
                         break;
                     default:
                         break;
@@ -59,9 +59,9 @@ public class Server {
 
                 // Send result to client
                 result = (double) Math.round(result * 10000000000d) / 10000000000d;
-                String formattedResult = "Answer: " + firstNumber + " " + operatorChar + " " + secondNumber + " = " + result;
-                if (operatorChar.equals("Max") || operatorChar.equals("Min")) {
-                    formattedResult = "Answer: " + operatorChar + " = " + result;
+                String formattedResult = "Answer: " + firstNumber + " " + operatorSymbol + " " + secondNumber + " = " + result;
+                if (operatorSymbol.equals("Max") || operatorSymbol.equals("Min")) {
+                    formattedResult = "Answer: " + operatorSymbol + " = " + result;
                 }
                 byte[] outgoingData = new byte[1024]; // create buffer with 1024 bytes of size
                 outgoingData = formattedResult.getBytes(); // fill buffer with data
