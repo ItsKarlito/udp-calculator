@@ -8,7 +8,6 @@ public class Server {
             DatagramSocket serverSocket = new DatagramSocket(9876); // create UDP socket
 
             while (true) { // always listen for incoming data
-
                 // Receive data from client
                 byte[] data = new byte[1024]; // create buffer with 1024 bytes of size
                 DatagramPacket incomingPacket = new DatagramPacket(data, data.length); // create packet for incoming data
@@ -27,32 +26,43 @@ public class Server {
                 double operator = Double.parseDouble(messageComponents[2]);
 
                 // Computing result
-                double result = 0;
+                double result = 0.0;
+                String operatorChar = "";
                 switch ((int) operator) {
                     case 0: // add
                         result = firstNumber + secondNumber;
+                        operatorChar = "+";
                         break;
                     case 1: // subtract
                         result = firstNumber - secondNumber;
+                        operatorChar = "-";
                         break;
                     case 2: // multiply
                         result = firstNumber * secondNumber;
+                        operatorChar = "x";
                         break;
                     case 3: // divide
                         result = firstNumber / secondNumber;
+                        operatorChar = "÷";
                         break;
                     case 4: // max
                         result = Math.max(firstNumber, secondNumber);
+                        operatorChar = "Max";
                         break;
                     case 5: // min
                         result = Math.min(firstNumber, secondNumber);
+                        operatorChar = "Min";
                         break;
                     default:
                         break;
                 }
 
                 // Send result to client
-                String formattedResult = "Answer: " + result;
+                result = (double)Math.round(result * 10000000000d) / 10000000000d;
+                String formattedResult = "Answer: " + firstNumber + " " + operatorChar + " " + secondNumber + " = " + result;
+                if (operatorChar.equals("Max") || operatorChar.equals("Min")) {
+                    formattedResult = "Answer: " + operatorChar + " = " + result;
+                }
                 byte[] outgoingData = new byte[1024]; // create buffer with 1024 bytes of size
                 outgoingData = formattedResult.getBytes(); // fill buffer with data
                 DatagramPacket sendingPacket = new DatagramPacket(outgoingData, outgoingData.length, IPAddress, port); // create packet for outgoing data
